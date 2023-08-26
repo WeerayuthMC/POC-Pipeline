@@ -65,7 +65,8 @@ jobs:
       run: echo "dont"
 
   unit-test:
-    runs-on: [build,code-scand,security-scan]
+    runs-on: ubuntu-latest
+    needs: [build,code-scand,security-scan]
     steps:
     - uses: actions/checkout@v3
     - name: task
