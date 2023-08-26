@@ -38,7 +38,7 @@ jobs:
       if: ${{ github.ref_name == 'main' }}
       run: echo "$ENV_NAME"
 
-  step01:
+  build:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/mainNaJa' }}
     steps:
@@ -48,55 +48,75 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
 
-  step02:
+  code-scand:
     runs-on: ubuntu-latest
-    needs: step01
+    needs: build
     steps:
     - uses: actions/checkout@v3
     - name: task
       run: echo "dont"
 
-  step03:
+  security-scan:
     runs-on: ubuntu-latest
-    needs: [step01, step02]
+    needs: build
     steps:
     - uses: actions/checkout@v3
     - name: task
       run: echo "dont"
 
-  step04:
-    runs-on: ubuntu-latest
+  unit-test:
+    runs-on: [build,code-scand,security-scan]
     steps:
     - uses: actions/checkout@v3
     - name: task
       run: echo "dont"
 
-  step05:
+  deploy-alpha:
     runs-on: ubuntu-latest
-    needs: [step04]
+    if: ${{ endsWith( github.ref, 'alpha' ) }}
+    needs: [unit-test]
     steps:
     - uses: actions/checkout@v3
     - name: task
       run: echo "dont"
 
-  step06:
+  deploy-staging:
     runs-on: ubuntu-latest
-    needs: [step03, step05]
+    if: ${{ endsWith( github.ref, 'beta' ) }}
+    needs: [unit-test]
     steps:
     - uses: actions/checkout@v3
     - name: task
       run: echo "dont"
 
-  step07:
+  deploy-prod:
     runs-on: ubuntu-latest
+    if: ${{ endsWith( github.ref, 'prod' ) }}
+    needs: [unit-test]
     steps:
     - uses: actions/checkout@v3
     - name: task
       run: echo "dont"
 
-  step08:
+  sanity-alpha:
     runs-on: ubuntu-latest
-    needs: [step02, step05, step07]
+    needs: [deploy-alpha]
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  sanity-staging:
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  sanity-prod:
+    runs-on: ubuntu-latest
+    needs: [deploy-prod]
     steps:
     - uses: actions/checkout@v3
     - name: task
