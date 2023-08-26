@@ -7,8 +7,9 @@ on:
       - develop
       - feature/**
     tags:        
-      - v2
-      - v1.*
+      - v*
+      - alpha*
+      - beta*
   pull_request:
     branches:
       - main
