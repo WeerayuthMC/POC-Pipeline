@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - main
+      - develop
+      - feature/**
+    tags:        
+      - v2
+      - v1.*
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  ENV_NAME: "FixENV"
+  
+jobs:
+
+  log:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: isMain
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: echo "This is a main!"
+    - name: github.ref
+      run: echo "${{ github.ref }}"
+    - name: github.ref.name
+      run: echo "${{ github.ref_name }}"
+    - name: secrets.PASSWORD
+      run: echo "${{ secrets.PASSWORD }}"
+    - name: vars.URL
+      run: echo "${{ vars.URL }}"
+    - name: github.ref_name == main
+      if: ${{ github.ref_name == 'main' }}
+      run: echo "$ENV_NAME"
+
+  step01:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
+
+  step02:
+    runs-on: ubuntu-latest
+    needs: step01
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  step03:
+    runs-on: ubuntu-latest
+    needs: [step01, step02]
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  step04:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  step05:
+    runs-on: ubuntu-latest
+    needs: [step04]
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  step06:
+    runs-on: ubuntu-latest
+    needs: [step03, step05]
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  step07:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
+
+  step08:
+    runs-on: ubuntu-latest
+    needs: [step02, step05, step07]
+    steps:
+    - uses: actions/checkout@v3
+    - name: task
+      run: echo "dont"
